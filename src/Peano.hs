@@ -18,13 +18,12 @@ instance Monoid Nat where
 
 instance Semiring Nat where
     sone = Succ Zero
-    stimes n m = mconcat $ replicate (toInt n) m
+    stimes n m = mconcat $ replicate (fromEnum n) m
 
 instance Enum Nat where
     succ = successor
     pred = predecessor
-    -- I'm Sure there's a nicer way for this.
-    toEnum i = foldl (\x _ -> successor x) Zero [1..i]
+    toEnum i = iterate successor Zero !! i
     fromEnum Zero = 0
     fromEnum (Succ Zero) = 1
     fromEnum (Succ n) = fromEnum n + 1
@@ -54,9 +53,5 @@ minus Zero Zero = Zero
 minus Zero (Succ _) = undefined
 minus n@(Succ _) Zero = n
 minus (Succ n) (Succ o) = n `minus` o
-
-toInt :: Nat -> Int
-toInt Zero = 0
-toInt (Succ n) = 1 + toInt n
 
 -- Test definitions
